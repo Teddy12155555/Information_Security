@@ -70,39 +70,41 @@ if len(sys.argv) == 4:
             i = i + 2
 
     elif sys.argv[1] == 'vernam':
-        
-        a = 2
+        newkey = Key+Plaintext
+        Ciphertext = Plaintext
+        for i in range(len(Plaintext)):
+            key_int = ord(newkey[i]) - ord('A')
+            txt_int = ord(Plaintext[i]) - ord('a')
+            Ciphertext[i] = chr((key_int ^ txt_int) + ord('A'))
     elif sys.argv[1] == 'row':
-        Cols = len(Key)
-        Rows = math.ceil(len(Plaintext)/len(Key))
-
-        # Do Matrix,but only Matrix
-        Matrix = np.zeros(shape = (Rows,Cols),dtype=str)
-        # print(len(Matrix))
-        k = 0
-        for i in range(len(Matrix)):
-            for j in range(len(Key)):
-                if k < len(Plaintext):
-                    Matrix[i][j] = Plaintext[k].upper()
-                    k = k + 1
-                else:
-                    break
-
-        # Add Column number on Matrix
-        Row_Trans = {}
-        # Transpose Matrix
-        Matrix = np.transpose(Matrix)
-        k = 0
-        for i in range(len(Matrix)):
-            Row_Trans[Key[k]] = Matrix[i]
-            k = k + 1
-        
-        # print(Row_Trans)
-        for i in sorted(Row_Trans.keys()):
-            for j in range(Rows):
-                Ciphertext += Row_Trans[i][j]
+        lt = [None]*len(key)
+        dic = {}
+        for i in range(len(key)):
+            lt[i] = key[i]
+            dic[key[i]] = ""
+        lt.sort()
+        for i in range(len(Plaintext)):
+            dic[key[i%len(key)]] += Plaintext[i].upper()
+        for i in range(len(lt)):
+            Ciphertext += dic[lt[i]]
     elif sys.argv[1] == 'rail_fence':
-        # text = np.zeros(shape=(int(Key),int(len(Ciphertext)/int(Key))))
-        a = 3
+        fence = int(key)
+        j=0
+        flag = True
+        dic={}
+        for i in range(fence):
+            dic[i] = ''
+        for i in range(len(Plaintext)):
+            dic[j] += Plaintext[i].upper()
+            if flag:
+                j+=1
+            else:
+                j-=1
+            if j == fence-1:
+                flag = False
+            if j == 0:
+                flag = True
+        for i in dic.values():
+            Ciphertext += i
     
     print(Ciphertext)
