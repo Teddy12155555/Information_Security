@@ -178,7 +178,7 @@ if len(sys.argv) == 4:
         for i in range(int(Key)):
             for j in range(len(Ciphertext)):
                 if matrix[i][j] == '*':
-                    matrix[i][j] = Ciphertext[count]
+                    matrix[i][j] = Ciphertext[count].lower()
                     count = count + 1
         # print(matrix)
 
@@ -197,4 +197,5 @@ if len(sys.argv) == 4:
             elif row == (int(Key) - 1):
                 Down = False
             col = col + 1
+        
     print(Plaintext)
