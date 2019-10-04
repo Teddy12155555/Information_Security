@@ -83,12 +83,12 @@ if len(sys.argv) == 4:
             i = i + 2
 
     elif sys.argv[1] == 'vernam':
-        newkey = Key+Plaintext
-        Ciphertext = Plaintext
+        newkey = Key.lower()+Plaintext
+        newkey.upper()
         for i in range(len(Plaintext)):
-            key_int = ord(newkey[i]) - ord('A')
-            txt_int = ord(Plaintext[i]) - ord('a')
-            Ciphertext[i] = chr((key_int ^ txt_int) + ord('A'))
+            key_int = ord(newkey[i]) - 97
+            txt_int = ord(Plaintext[i]) - 97
+            Ciphertext += chr((key_int ^ txt_int)+65)
     elif sys.argv[1] == 'row':
         lt = [None]*len(Key)
         dic = {}
