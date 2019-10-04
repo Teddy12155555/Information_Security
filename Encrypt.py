@@ -24,7 +24,10 @@ if len(sys.argv) == 4:
         temp = []
         for k in Key:
             if k not in temp:
-                temp.append(k)
+                if k == 'J':
+                    temp.append('I')
+                else:
+                    temp.append(k)
 
         for c in alpha:
             if c not in temp and c != 'J':
@@ -36,9 +39,19 @@ if len(sys.argv) == 4:
         # Encrypt 
         i = 0
         while i < len(Plaintext):
-            w1 = Plaintext[i].upper()
-            w2 = Plaintext[i+1].upper()
+            # Keep it even
+            try:
+                w1 = Plaintext[i].upper()
+                w2 = Plaintext[i+1].upper()
+            except:
+                w2 = 'x'
             
+            # Dealing ij
+            if w1 == 'J':
+                w1 = 'I'
+            if w2 == 'J':
+                w2 = 'I'
+
             # Find position
             row1, col1 = np.where(key_Matrix == w1)
             row2, col2 = np.where(key_Matrix == w2)
@@ -77,18 +90,18 @@ if len(sys.argv) == 4:
             txt_int = ord(Plaintext[i]) - ord('a')
             Ciphertext[i] = chr((key_int ^ txt_int) + ord('A'))
     elif sys.argv[1] == 'row':
-        lt = [None]*len(key)
+        lt = [None]*len(Key)
         dic = {}
-        for i in range(len(key)):
-            lt[i] = key[i]
-            dic[key[i]] = ""
+        for i in range(len(Key)):
+            lt[i] = Key[i]
+            dic[Key[i]] = ""
         lt.sort()
         for i in range(len(Plaintext)):
-            dic[key[i%len(key)]] += Plaintext[i].upper()
+            dic[Key[i%len(Key)]] += Plaintext[i].upper()
         for i in range(len(lt)):
             Ciphertext += dic[lt[i]]
     elif sys.argv[1] == 'rail_fence':
-        fence = int(key)
+        fence = int(Key)
         j=0
         flag = True
         dic={}
