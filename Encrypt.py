@@ -44,7 +44,7 @@ if len(sys.argv) == 4:
                 w1 = Plaintext[i].upper()
                 w2 = Plaintext[i+1].upper()
             except:
-                w2 = 'x'
+                w2 = 'X'
             
             # Dealing ij
             if w1 == 'J':
