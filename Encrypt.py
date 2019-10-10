@@ -13,6 +13,7 @@ if len(sys.argv) == 4:
     if sys.argv[1] == 'caesar':
         
         for c in Plaintext:
+            # out of range use mod 26
             if c.isalpha():
                 Ciphertext += alpha[(alpha.index(c.upper()) + int(Key)) % 26]
             else:
@@ -83,19 +84,24 @@ if len(sys.argv) == 4:
             i = i + 2
 
     elif sys.argv[1] == 'vernam':
+        # make new key
         newkey = Key.lower()+Plaintext
         newkey.upper()
+        #use int xor int(Ascii)
         for i in range(len(Plaintext)):
             key_int = ord(newkey[i]) - 97
             txt_int = ord(Plaintext[i]) - 97
             Ciphertext += chr((key_int ^ txt_int)+65)
     elif sys.argv[1] == 'row':
+        # lt = row num
         lt = [None]*len(Key)
         dic = {}
+        # make a dic to store row num as key
         for i in range(len(Key)):
             lt[i] = Key[i]
             dic[Key[i]] = ""
         lt.sort()
+        # find index of input_key and as key of each char 
         for i in range(len(Plaintext)):
             dic[Key[i%len(Key)]] += Plaintext[i].upper()
         for i in range(len(lt)):
@@ -105,6 +111,8 @@ if len(sys.argv) == 4:
         j=0
         flag = True
         dic={}
+        # same as "row" 
+        # let j as it and ++ and --
         for i in range(fence):
             dic[i] = ''
         for i in range(len(Plaintext)):
