@@ -1,4 +1,3 @@
-import numpy as np
 import sys
 
 # It's all about the Array
