@@ -50,7 +50,7 @@ def CBC_Mode(key, ciphertext, IV):
 
         # decrypt
         plaintext += enc.byte_xor(cipher.decrypt(block), iv)
-        iv = ciphertext
+        iv = block
     return plaintext
 
 
@@ -68,6 +68,7 @@ def main():
     # Initial
     open_file = "./encrypt_result.png"
     imgByteArr,Header,Ciphertext = enc.Preprocess(open_file)
+    print(Ciphertext[0:20])
 
     # Call Mode
     if Mode == "ECB":

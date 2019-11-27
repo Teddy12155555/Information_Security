@@ -109,9 +109,11 @@ def main():
         print("Mode:  ECB  CBC  Cool")
         return
 
+    
     # Ciphertext to output image
     Output_image(Header, Ciphertext, "./encrypt_result.png")
 
+    print(Ciphertext[0:20])
 
 if __name__ == '__main__':
     # main func
