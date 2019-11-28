@@ -15,7 +15,7 @@ print('IV: ', enc.IV)     # Encrypt用的IV
 
 def ECB_Mode(key, ciphertext):
 
-    cipher = AES.new(key, AES.MODE_ECB)     # AES block cipher 
+    cipher = AES.new(key, AES.MODE_ECB)     # AES block cipher
     plaintext = bytes()
     
     for i in range(0,len(ciphertext),AES.block_size):
@@ -53,6 +53,28 @@ def CBC_Mode(key, ciphertext, IV):
         iv = block
     return plaintext
 
+def Cool_PCBC_Mode(key,ciphertext,IV):
+
+    cipher = AES.new(key,AES.MODE_ECB)
+    plaintext = bytes()
+    decrypted = IV
+    iv = IV
+    
+    for i in range(0,len(ciphertext),AES.block_size):
+        # take one block size
+        block = ciphertext[i:i+AES.block_size]
+        
+        # padding if len of the last temp not enough
+        if(len(block) != AES.block_size):
+            padding = AES.block_size - len(block)   # used number of empty bytes to padding
+            for p in range(padding):
+                block += bytes([padding])
+        
+        # decrypt
+        decrypted = enc.byte_xor(cipher.decrypt(block),iv)
+        iv = enc.byte_xor(decrypted,block)
+        plaintext += decrypted
+    return plaintext
 
 
 def main():
@@ -77,7 +99,8 @@ def main():
     elif Mode == "CBC":
         Plaintext = CBC_Mode(enc.Key, Ciphertext, enc.IV)
         pass
-    elif Mode == "Cool":
+    elif Mode == "PCBC":
+        Plaintext = Cool_PCBC_Mode(enc.Key, Ciphertext, enc.IV)
         pass
     else:
         print("[Warning]  Undefined Mode")

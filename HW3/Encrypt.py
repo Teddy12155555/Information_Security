@@ -15,7 +15,7 @@ def byte_xor(b1, b2):
 
 def ECB_Mode(key, plaintext):
 
-    cipher = AES.new(key, AES.MODE_ECB)     # AES block cipher 
+    cipher = AES.new(key, AES.MODE_ECB)     # AES block cipher
     ciphertext = bytes()
     
     for i in range(0,len(plaintext),AES.block_size):
@@ -54,9 +54,27 @@ def CBC_Mode(key, plaintext, IV):
         ciphertext += encrypted
     return ciphertext
 
-def Cool_Mode():
-    
-    pass
+def Cool_PCBC_Mode(key,plaintext,IV):
+    cipher = AES.new(key,AES.MODE_ECB)
+    ciphertext = bytes()
+    encrypted = IV
+    iv = IV
+
+    for i in range(0,len(plaintext),AES.block_size):
+        # take one block size
+        block = plaintext[i:i+AES.block_size]
+        
+        # padding if len of the last temp not enough
+        if(len(block) != AES.block_size):
+            padding = AES.block_size - len(block)   # used number of empty bytes to padding
+            for p in range(padding):
+                block += bytes([padding])
+        
+        # encrypt
+        encrypted = cipher.encrypt(byte_xor(block,iv))
+        iv = byte_xor(encrypted,block)
+        ciphertext += encrypted
+    return ciphertext
 
 # PPM to Byte array
 def PPM_to_ByteArr(open_file):
@@ -86,7 +104,7 @@ def main():
     if len(sys.argv) != 2:
         print("[Warning]")
         print("  Input format:  python3 <filename> <Mode>")
-        print("  <Mode>:  ECB  CBC  Cool")
+        print("  <Mode>:  ECB  CBC  PCBC")
         return
     else:
         Mode = sys.argv[1].upper()
@@ -103,11 +121,13 @@ def main():
     elif Mode == "CBC":
         Ciphertext = CBC_Mode(Key,Plaintext,IV)
         print('IV: ', IV)
-    elif Mode == "Cool":
+    elif Mode == "PCBC":
+        Ciphertext = Cool_PCBC_Mode(Key,Plaintext,IV)
+        print('IV: ', IV)
         pass
     else:
         print("[Warning]  Undefined Mode")
-        print("Mode:  ECB  CBC  Cool")
+        print("Mode:  ECB  CBC  PCBC")
         return
 
     
