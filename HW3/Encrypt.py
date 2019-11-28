@@ -120,10 +120,8 @@ def main():
         Ciphertext = ECB_Mode(Key,Plaintext)
     elif Mode == "CBC":
         Ciphertext = CBC_Mode(Key,Plaintext,IV)
-        print('IV: ', IV)
     elif Mode == "PCBC":
         Ciphertext = Cool_PCBC_Mode(Key,Plaintext,IV)
-        print('IV: ', IV)
         pass
     else:
         print("[Warning]  Undefined Mode")
@@ -134,7 +132,6 @@ def main():
     # Ciphertext to output image
     Output_image(Header, Ciphertext, "./encrypt_result.png")
 
-    print(Ciphertext[0:20])
 
 if __name__ == '__main__':
     # main func

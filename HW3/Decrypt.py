@@ -9,9 +9,9 @@ import sys
 # ----------------------------- #
 import Encrypt as enc
 
-print('Key: ', enc.Key)   # Encrypt用的Key
-print('IV: ', enc.IV)     # Encrypt用的IV
-# ------------ Decrypt----------------- #
+# print('Key: ', enc.Key)   # Encrypt用的Key
+# print('IV: ', enc.IV)     # Encrypt用的IV
+
 
 def ECB_Mode(key, ciphertext):
 
@@ -91,7 +91,6 @@ def main():
     # Initial
     open_file = "./encrypt_result.png"
     imgByteArr,Header,Ciphertext = enc.Preprocess(open_file)
-    print(Ciphertext[0:20])
 
     # Call Mode
     if Mode == "ECB":
