@@ -54,6 +54,7 @@ def CBC_Mode(key, ciphertext, IV):
     return plaintext
 
 
+
 def main():
     # Input format
     if len(sys.argv) != 2:
@@ -81,6 +82,7 @@ def main():
     else:
         print("[Warning]  Undefined Mode")
         print("Mode:  ECB  CBC  Cool")
+        return
 
     # Ciphertext to output image
     enc.Output_image(Header, Plaintext, "./decrypt_reslut.png")

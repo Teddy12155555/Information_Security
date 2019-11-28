@@ -55,7 +55,7 @@ def CBC_Mode(key, plaintext, IV):
     return ciphertext
 
 def Cool_Mode():
-
+    
     pass
 
 # PPM to Byte array
@@ -94,6 +94,7 @@ def main():
     
     # Initial
     open_file = "./linux-penguin.jpg"
+    # open_file = "./fatdog.jpg"
     imgByteArr,Header,Plaintext = Preprocess(open_file)
 
     # Call Mode
