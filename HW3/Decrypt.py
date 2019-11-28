@@ -89,7 +89,7 @@ def main():
         pass
     
     # Initial
-    open_file = "./encrypt_result.png"
+    open_file = enc.output_filename
     imgByteArr,Header,Ciphertext = enc.Preprocess(open_file)
 
     # Call Mode
@@ -107,7 +107,7 @@ def main():
         return
 
     # Ciphertext to output image
-    enc.Output_image(Header, Plaintext, "./decrypt_reslut.png")
+    enc.Output_image(Header, Plaintext, "./decrypt_reslut.gif")
 
 
 if __name__ == '__main__':

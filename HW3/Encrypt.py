@@ -9,6 +9,7 @@ import sys
 Key = b'Sixteen byte key'   # Key
 # IV = Random.new().read(AES.block_size) # IV
 IV = b'5\x8dh\xce\xb9\x8b\xaa\xb4\xae\xefOK\xb5v\x9e\xcc' # Random IV
+output_filename = "./encrypt_result.bmp"    # output image filename
 
 def byte_xor(b1, b2):
     return bytes([_a ^ _b for _a, _b in zip(b1, b2)])
@@ -58,7 +59,6 @@ def Cool_PCBC_Mode(key,plaintext,IV):
     cipher = AES.new(key,AES.MODE_ECB)
     ciphertext = bytes()
     encrypted = IV
-    iv = IV
 
     for i in range(0,len(plaintext),AES.block_size):
         # take one block size
@@ -71,9 +71,9 @@ def Cool_PCBC_Mode(key,plaintext,IV):
                 block += bytes([padding])
         
         # encrypt
-        encrypted = cipher.encrypt(byte_xor(block,iv))
-        iv = byte_xor(encrypted,block)
+        encrypted = cipher.encrypt(byte_xor(block,encrypted))
         ciphertext += encrypted
+        encrypted = byte_xor(encrypted,block)
     return ciphertext
 
 # PPM to Byte array
@@ -130,7 +130,7 @@ def main():
 
     
     # Ciphertext to output image
-    Output_image(Header, Ciphertext, "./encrypt_result.png")
+    Output_image(Header, Ciphertext, output_filename)
 
 
 if __name__ == '__main__':
