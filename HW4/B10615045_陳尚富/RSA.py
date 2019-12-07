@@ -219,19 +219,17 @@ def Decrypt():
     ## Decrypt the file we Encrypt previous
     n,d,p,q = take_key(PRIVATE_KEY)
 
-    dec = []
     enc_msg = open(ENC_MESSAGE).readlines() # Read the file we Encrypt previous
+    temp = open(DEC_MESSAGE, 'w')   # temp output file
     for C in enc_msg:
         M = Chinese_Remainder(int(C),d,n,(p,q)) # Decrypt
         # M = pow(int(C),d,n)
         # M = modPow(int(C),d,n)
-        dec.append(M)
-    
-    # Output file
-    temp = open(DEC_MESSAGE, 'w')
-    for i in dec:
-        temp.write("%s\n" % str(i))
+        temp.write("%s\n" % str(M)) # Write output file
+
     temp.close()
+
+    # Output file
     print(blocksToText(DEC_MESSAGE))
 
 # cmd: python3 RSA.py -e input_file
@@ -243,16 +241,13 @@ def Encrypt():
     # Encrypt
     textToBlocks(message_file, n)   # Make message to block
     txtblk = open(ENC_MESSAGE).readlines()  # Read output file made in testToBlocks()
-    enc = []
+    
+    outfile = open(ENC_MESSAGE,'w') # Open output file
     for M in txtblk:
         C = pow(int(M),e,n) # Encrypt
-        enc.append(C)
-
-    # Output file
-    outfile = open(ENC_MESSAGE,'w')
-    for i in enc:
-        print(i)
-        outfile.write("%s\n" % str(i))
+        print(C)    # output on command line
+        outfile.write("%s\n" % str(C))  # Write output file
+               
     outfile.close()
 
 def Init():
