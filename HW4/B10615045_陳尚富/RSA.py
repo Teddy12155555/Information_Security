@@ -1,6 +1,7 @@
 import sys
 import random
 import numpy as np
+import os
 
 test_round = 40
 FOLDER = './MsgAndKey/'
@@ -59,14 +60,12 @@ def Probably_Prime(bits):
     return p
 
 # ============== Square and Miltiply Algorithm=================
-# Following steps needs to be carried out :
-#
+# Efficient way to do base ^ exp
 # 1. Get the binary representation of the exponent.
 # 2. Bits are read from left to right (MSB first) and it should start with '1'.
 # 3. Starting value = n^0, but always start with '1', so init will be n (square and mulitply)
 # 4. If scanned bit is 1 then, square the value and then multiply by n
 # 5. If scanneed bit is 0 then, square the value.
-# 8. Repeat 4. 5. for all the bits.
 # ============================================================
 def Square_and_Multiply(base, exp):
     exponent = bin(exp)
@@ -89,23 +88,32 @@ def SM_mod(base, exp, modulus):
         base = base * base % modulus    # square
     return result
 
-# Uses Euler theorem and Square_and_Multiply
+# ================= modPow====================
+# Equals base ^ exp % modulus. 
+# Only call in Chinese_Remainder(), so modulus will always
+# be prime. And exp can be reduced using Euler theorem.
+# Uses Euler theorem and Square_and_Multiply.
+#=============================================
 def modPow(base, exp, modulus):
     # do Euler
-    if Miller_Robin_test(modulus):   # do when modulu is prime (too complex when is not)
-        if base%modulus != 0 and modulus%base != 0:  # not the multiply of eachother
-            exp = exp % (modulus-1) # exp mod phi(modulu)
-        
+    exp = exp % (modulus-1) # exp mod phi(modulu)
     return SM_mod(base,exp,modulus)
 
-
+# ================= Chinese_Remainder ==============
+# Used when Decrypt. base ^ exp % M is too big to compute.
+# result = Sum (ai * Mi * yi) % M
+# mi: pairwise relatively prime
+# Mi: M // mi
+# yi: multi inverse of Mi (mod mi)
+# ai: x mod mi
+# ==================================================
 def Chinese_Remainder(base, exp, M, m):
     # m: prime number , M: m1*m2*...*mn
     result = 0
 
     for i in range(len(m)):
         mi = m[i]
-        ai = SM_mod(base, exp, mi)  # base ^ exp = x
+        ai = modPow(base, exp, mi)  # base ^ exp = x
         
         Mi = M // mi
         r, yi, _ = Extended_GCD(Mi, mi)
@@ -133,7 +141,7 @@ def GCD(n,m):
         n = temp
     return n         
 
-# Algorithm to turn text into blocks
+# Algorithm to turn text into blocks, used in Encrypt
 def textToBlocks(infileName, N):
     
     block_size = (len(bin(N)[2:]) // 7)-1  # make sure message bits is less then N bits
@@ -166,7 +174,7 @@ def textToBlocks(infileName, N):
         outfile.write("%s" % item)
     outfile.close()
 
-# Algorithm to turn blocks into text
+# Algorithm to turn blocks into text, used in Decrypt
 def blocksToText(infile):
     # Open file
     intList = open(infile).readlines()
@@ -206,8 +214,7 @@ def take_key(filename):
         q = int((keylist[3])[2:])
         return n,k,p,q
 
-
-# python3 RSA.py -d
+# cmd: python3 RSA.py -d
 def Decrypt():
     ## Decrypt the file we Encrypt previous
     n,d,p,q = take_key(PRIVATE_KEY)
@@ -227,8 +234,7 @@ def Decrypt():
     temp.close()
     print(blocksToText(DEC_MESSAGE))
 
-
-# python3 RSA.py -e input_file
+# cmd: python3 RSA.py -e input_file
 def Encrypt():
     # Take message file and public key
     message_file = sys.argv[2]
@@ -248,7 +254,6 @@ def Encrypt():
         print(i)
         outfile.write("%s\n" % str(i))
     outfile.close()
-
 
 def Init():
 
@@ -272,34 +277,23 @@ def Init():
     d = d % phi_N
     
     print('private key(\nN:\n{},\nd:\n{})\n\npublic key(\nN:\n{},\ne:\n{})\n'.format(N, d, N, e))
+    print('N: \n{}'.format(N))
+    print('p: \n{}\nq: \n{}'.format(p,q))
 
     # Generate public key file
     gen_keyfile(0, N, e, PUBLIC_KEY)
     # Generate private key file
     gen_keyfile(1, N, d, PRIVATE_KEY, p, q)
-    
-# TEST
-    print('N: \n{}'.format(N))
-    print('p: \n{}\nq: \n{}'.format(p,q))
-
-    print(Chinese_Remainder_forRSA(894,1,1001,(7,11,13)))
-    print(Chinese_Remainder_forRSA(17639,11613,21829,(83,263)))
-    
-    if modPow(147882322,e,N)!=pow(147882322,e,N):
-        print(pow(147882322,e,N))
-        print(modPow(147882322,e,N))
-
-    if pow(147882322,d,N)!=modPow(147882322,d,N):
-        print(pow(147882322,d,N))
-        print(modPow(147882322,d,N))
-        
-
 
 if __name__ == "__main__":
 
-    # try:
+    # Create folders to save key files
+    if not os.path.exists(FOLDER):
+        os.makedirs(FOLDER)
+    
+    try:
         # Input processing
-        if sys.argv[1] == 'init':   # return p,q,n,e,d
+        if sys.argv[1] == '-init':   # return p,q,n,e,d
             Init()
             
         elif sys.argv[1] == '-e':   # encrypt
@@ -307,9 +301,11 @@ if __name__ == "__main__":
 
         elif sys.argv[1] == '-d':   # decrypt
             Decrypt()
-    #     else:
-    #         raise
-
-    # except:
-    #     print('Error: Input Format')
-    #     pass
+        else:
+            raise
+    except:
+        print('<Error>: Input Format')
+        print('[Initial]: python3 RSA.py -init {bits}')
+        print('[Encrypt]: python3 RSA.py -e {input_file}')
+        print('[Decrypt]: python3 RSA.py -d')
+        print('<Info>: Initial -> Encrypt -> Decrypt')
