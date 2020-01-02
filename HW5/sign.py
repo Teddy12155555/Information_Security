@@ -3,10 +3,9 @@ from method import *
 from hashlib import sha1
 import random
 
-def sign():
-	if(len(sys.argv) < 2):
-		print("Format: python sign.py filename")
-	elif(len(sys.argv) == 2):	
+def sign(OutputName):
+	
+	if(len(sys.argv) == 3):	
 		print("Signing the file...")
 		fileName = sys.argv[1]
 		file0 = open(fileName,"r")
@@ -27,8 +26,17 @@ def sign():
 		r = mod_Square_and_Multiply(a,Ke,p)
 		r = r % q
 		s = ((int(hex,0) + (d * r)) * KeInv) % q
-		SignFile = open("signature.txt","w")
+		SignFile = open(OutputName,"w")
 		SignFile.write(str(r)+"\n"+str(s)+"\n")
 		SignFile.close()
 		print ('sign complete')
-sign()
+	else:
+		print("Format: python sign.py filename")
+
+
+if __name__ == '__main__':
+	if(len(sys.argv) != 3):
+		print("Format: python sign.py {input filename" + "} {output filename" + "}")
+	elif(len(sys.argv) == 3):
+		OutputName = sys.argv[2]
+		sign(OutputName)
