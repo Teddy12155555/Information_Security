@@ -26,9 +26,9 @@ def verification(OutputName):
 		u2 = (w * r) % q
 		v = ((pow(a,u1,p) * pow(b,u2,p))%p) % q
 		if (v == (r % q)):
-			print("signature is valid")
+			print("signature is valid!!!")
 		else:
-			print("signature is invalid")
+			print("signature is invalid!!!")
 	else:
 		print("Format: python verification.py filename")
 
