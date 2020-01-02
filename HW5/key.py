@@ -16,14 +16,14 @@ def keyGeneration():
 		L = p.bit_length()
 
 		h = random.randint(1, p-1)
-		a = mod_Square_And_Multiply(h, (p-1)//q, p)		# 𝛼 = h ^(p-1/q) (mod p)
+		a = mod_Square_and_Multiply(h, (p-1)//q, p)		# 𝛼 = h ^(p-1/q) (mod p)
 
 		# make sure p is 1024 bits, p-1 and q is not relatively prime, a^q mod p == 1
-		if(L == 1024 and (GCD(p-1, q)) > 1 and mod_Square_And_Multiply(a, q, p) == 1):
+		if(L == 1024 and (GCD(p-1, q)) > 1 and mod_Square_and_Multiply(a, q, p) == 1):
 			loop = False
 			
 			d = random.randint(1, q-1)
-			b = mod_Square_And_Multiply(a, d, p)
+			b = mod_Square_and_Multiply(a, d, p)
 			
 			file1 = open("public_key.txt","w")
 			out_txt = str(p) + "\n" + str(q) + "\n" + str(a) + "\n" + str(b) + "\n"
