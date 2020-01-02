@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*
 from method import *
 
 def keyGeneration():
