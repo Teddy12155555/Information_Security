@@ -1,1 +1,6 @@
-tetewtwopetkjweopjtpowejtop
+Digital Signature Algorithm
+From Wikipedia, the free encyclopedia
+Jump to navigationJump to search
+The Digital Signature Algorithm (DSA) is a Federal Information Processing Standard for digital signatures, based on the mathematical concept of modular exponentiation and the discrete logarithm problem. DSA is a variant of the Schnorr and ElGamal signature schemes.[1]:486
+
+The National Institute of Standards and Technology (NIST) proposed DSA for use in their Digital Signature Standard (DSS) in 1991, and adopted it as FIPS 186 in 1994.[2] Four revisions to the initial specification have been released. DSA is patented but NIST has made this patent available worldwide royalty-free.
