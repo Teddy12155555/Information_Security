@@ -1,75 +1,39 @@
-from miller import *
-from fractions import gcd
-
-def loopIsPrime(number):
-	#looping to reduce probability of rabin miller false +
-	isNumberPrime = True
-	for i in range(0,20):
-		isNumberPrime*=isPrime(number)
-		if(isNumberPrime == False):
-			return isNumberPrime
-	return isNumberPrime	
-def modexp( base, exp, modulus ):
-        return pow(base, exp, modulus)
-def SquareAndMultiply(x,c,n):
-	z=1
-	#getting value of l by converting c into binary representation and getting its length
-	c="{0:b}".format(c)[::-1] #reversing the binary string
-	
-	l=len(c)
-	for i in range(l-1,-1,-1):
-		z=pow(z,2)
-		z=z%n
-		if(c[i] == '1'):
-			z=(z*x)%n
-	return z	
+from method import *
 
 def keyGeneration():
 	
 	print("Computing key values, please wait...")
 	loop = True
 	while loop:
-		k = random.getrandbits(1024-160)
-		q = generateLargePrime(160)
-		p = (k*q)+1
-		while not (isPrime(p)):
-			k = random.getrandbits(1024-160)
-			q=generateLargePrime(160)
-			p=(k*q)+1
-		L = p.bit_length()
-		"""
-		g=t^(p-1)/q  %  p
-		if(g^q  % p = 1) we found g
-		"""
+		p = 4	# make it not prime to go into the loop
+		# Find Q firt then find P
+		while not ( Miller_Robin_test(p) ):		# if p is not a prime, then loop umtil it is prime
+			
+			k = random.getrandbits(1024-160-1) + pow(2,1024-160-1)	# random (1024-160)bits number
+			q = Generate_Probably_Prime(160)	# generate large prime
+			p = (k * q) + 1
 
-		t = random.randint(1,p-1)
-		a = SquareAndMultiply(t, (p-1)//q, p)
-		
-		if(L == 1024 and (gcd(p-1,q)) > 1 and SquareAndMultiply(a,q,p) == 1):
+		L = p.bit_length()
+
+		h = random.randint(1, p-1)
+		a = mod_Square_And_Multiply(h, (p-1)//q, p)		# 𝛼 = h ^(p-1/q) (mod p)
+
+		# make sure p is 1024 bits, p-1 and q is not relatively prime, a^q mod p == 1
+		if(L == 1024 and (GCD(p-1, q)) > 1 and mod_Square_And_Multiply(a, q, p) == 1):
 			loop = False
-			#print((p-1)%q)
 			
-			d = random.randint(2,q-1)
-			b = SquareAndMultiply(a,d,p)
-			#print("p = ",p)
-			#print("q = ",q)
-			#print("g = ",g)
-			#print("h = ",h)
-			#print("a = ",a)
+			d = random.randint(1, q-1)
+			b = mod_Square_And_Multiply(a, d, p)
 			
-			file1 = open("key.txt","w")
-			file1.write(str(p))
-			file1.write("\n")
-			file1.write(str(q))
-			file1.write("\n")
-			file1.write(str(a))
-			file1.write("\n")
-			file1.write(str(b))
+			file1 = open("public_key.txt","w")
+			out_txt = str(p) + "\n" + str(q) + "\n" + str(a) + "\n" + str(b) + "\n"
+			file1.write(out_txt)
 			file1.close()
-			file2 = open("secretkey.txt","w")
+
+			file2 = open("private_key.txt","w")
 			file2.write(str(d))
 			file2.close()
-			print("Verification key stored at key.txt and secret key stored at secretkey.txt")
+			
+			print("Public key stored at public_key.txt and private key stored at private_key.txt")
             
-
 keyGeneration()
