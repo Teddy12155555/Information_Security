@@ -27,8 +27,7 @@ def verification():
         u1 = (w * int(hex,0)) % q
         u2 = (w * r) % q
         v = ((pow(a,u1,p) * pow(b,u2,p))%p) % q
-        print(v)
-        print(r)
+        print(int(hex,0))
         if (v == (r % q)):
             print("signature is valid")
         else:

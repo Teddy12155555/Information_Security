@@ -28,7 +28,7 @@ def sign():
         #print(int(hex,0).bit_length())
         r = mod_Square_and_Multiply(a,Ke,p)
         r = r % q
-        s = int(hex,0)
+        s = ((int(hex,0) + (d * r)) * KeInv) % q
         #output signed file
         SignFile = open("signature.txt","w")
         SignFile.write(str(r)+"\n"+str(s)+"\n")
