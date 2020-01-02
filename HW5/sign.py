@@ -39,4 +39,7 @@ if __name__ == '__main__':
 		print("Format: python sign.py {input filename" + "} {output filename" + "}")
 	elif(len(sys.argv) == 3):
 		OutputName = sys.argv[2]
-		sign(OutputName)
+		try:
+			sign(OutputName)
+		except:
+			print("FileName Error")
