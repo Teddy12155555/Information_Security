@@ -21,16 +21,16 @@ def verification():
 		r = int(file2.readline().rstrip())
 		s = int(file2.readline().rstrip())
         
-        SHA = sha1(string.encode('utf-8')).hexdigest()
-        hex = "0x"+SHA
-        w = Inverse(s,q)
-        u1 = (w * int(hex,0)) % q
-        u2 = (w * r) % q
-        v = ((pow(a,u1,p) * pow(b,u2,p))%p) % q
-        print(int(hex,0))
-        if (v == (r % q)):
-            print("signature is valid")
-        else:
-            print("signature is invalid")
+		SHA = sha1(string.encode('utf-8')).hexdigest()
+		hex = "0x"+SHA
+		w = Inverse(s,q)
+		u1 = (w * int(hex,0)) % q
+		u2 = (w * r) % q
+		v = ((pow(a,u1,p) * pow(b,u2,p))%p) % q
+		print(int(hex,0))
+		if (v == (r % q)):
+			print("signature is valid")
+		else:
+			print("signature is invalid")
 
 verification()
